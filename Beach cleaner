@@ -173,6 +173,23 @@
     }
     .back-link:hover { color: var(--accent); }
 
+    /* PHOTO */
+    .project-photo {
+      width: 100%; border-radius: 8px;
+      overflow: hidden; margin-top: 1.8rem;
+      border: 1px solid #ddd;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    }
+    .project-photo img {
+      width: 100%; display: block;
+      object-fit: cover; max-height: 480px;
+    }
+    .photo-caption {
+      background: var(--ocean); color: var(--sand);
+      font-family: 'Space Mono', monospace; font-size: 0.72rem;
+      padding: 0.6rem 1rem; letter-spacing: 0.03em;
+    }
+
     @media (max-width: 600px) {
       nav { padding: 0.8rem 1rem; }
       main { padding: 3rem 1.2rem; }
@@ -213,6 +230,11 @@
     <h2>What It Does</h2>
     <p>This robot autonomously navigates a user-defined GPS coordinate path along a beach, sifting through sand with a conveyor belt and plastic mesh to separate microplastics and small debris into an onboard collection bin. It charges during the day via a solar docking station and operates at night when the beach is clear.</p>
     <p>The project spans mechanical design (3D-printed tank chassis + conveyor), electronics (custom PCB, motor drivers, sensor fusion), and software (GPS waypoint navigation in C++ on ESP32).</p>
+
+    <div class="project-photo">
+      <img src="robot-photo.png" alt="Autonomous beach cleaning robot — 3D-printed red and green tank chassis with track system, tested on grass" />
+      <div class="photo-caption">Final prototype — GPS-guided tank chassis with 3D-printed PLA shell, tested on grass surface</div>
+    </div>
   </section>
 
   <!-- PROBLEM -->
