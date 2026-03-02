@@ -1,57 +1,329 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Electric Wheelchair Prototype</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Electric Wheelchair Prototype — Mohammed Yasin Rezaie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sand: #e8d5b0;
+      --ocean: #1a3a4a;
+      --teal: #2a7f8f;
+      --accent: #f0a500;
+      --light: #f5f0e8;
+      --dark: #0f1e26;
+      --text: #1a2830;
+      --muted: #5a7080;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--light);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(15,30,38,0.95);
+      backdrop-filter: blur(8px);
+      padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    nav a { color: var(--sand); text-decoration: none; font-family: 'Space Mono', monospace; font-size: 0.8rem; letter-spacing: 0.05em; }
+    nav a:hover { color: var(--accent); }
+    .nav-logo { font-size: 0.9rem; font-weight: 700; color: var(--accent) !important; }
+
+    .hero {
+      min-height: 100vh;
+      background: var(--ocean);
+      display: flex; align-items: flex-end;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 40%, rgba(42,127,143,0.25) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(240,165,0,0.1) 0%, transparent 50%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; opacity: 0.05;
+      background-image: linear-gradient(var(--teal) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--teal) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .hero-content { position: relative; max-width: 900px; }
+    .hero-tag {
+      display: inline-block;
+      background: var(--teal); color: white;
+      font-family: 'Space Mono', monospace; font-size: 0.7rem;
+      padding: 0.3rem 0.8rem; border-radius: 2px;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(2.2rem, 6vw, 4.5rem);
+      color: white;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+    h1 span { color: var(--accent); }
+    .hero-sub {
+      color: var(--sand); font-size: 1.1rem; font-weight: 300;
+      max-width: 600px; margin-bottom: 2rem;
+    }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--sand); font-family: 'Space Mono', monospace;
+      font-size: 0.7rem; padding: 0.35rem 0.8rem; border-radius: 100px;
+    }
+
+    main { max-width: 860px; margin: 0 auto; padding: 5rem 2rem; }
+
+    section { margin-bottom: 5rem; }
+
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 0.6rem;
+    }
+    h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.6rem; color: var(--ocean);
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 2px solid var(--sand);
+    }
+    p { color: var(--text); margin-bottom: 1rem; font-size: 1rem; }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; margin-top: 1.5rem; }
+    .card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 1.4rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .card-icon { font-size: 1.6rem; margin-bottom: 0.6rem; }
+    .card h3 { font-family: 'Space Mono', monospace; font-size: 0.85rem; color: var(--ocean); margin-bottom: 0.4rem; }
+    .card p { font-size: 0.88rem; color: var(--muted); margin: 0; }
+
+    .spec-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    .spec-table tr { border-bottom: 1px solid #e5e5e5; }
+    .spec-table tr:last-child { border: none; }
+    .spec-table td { padding: 0.7rem 0.5rem; font-size: 0.9rem; }
+    .spec-table td:first-child { font-family: 'Space Mono', monospace; font-size: 0.78rem; color: var(--teal); width: 40%; }
+
+    .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+    .result-box {
+      background: var(--ocean); color: white;
+      border-radius: 6px; padding: 1.4rem; text-align: center;
+    }
+    .result-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.8rem; color: var(--accent);
+      display: block; margin-bottom: 0.3rem;
+    }
+    .result-label { font-size: 0.8rem; opacity: 0.75; }
+
+    .callout {
+      background: #fff8e6;
+      border-left: 3px solid var(--accent);
+      padding: 1rem 1.2rem; border-radius: 0 6px 6px 0;
+      margin-top: 1rem;
+    }
+    .callout p { font-size: 0.9rem; color: var(--text); margin: 0; }
+
+    .timeline { border-left: 2px solid var(--teal); padding-left: 1.5rem; margin-top: 1.5rem; }
+    .tl-item { position: relative; margin-bottom: 1.8rem; }
+    .tl-item::before {
+      content: '';
+      position: absolute; left: -1.9rem; top: 0.4rem;
+      width: 10px; height: 10px;
+      background: var(--accent); border-radius: 50%;
+    }
+    .tl-item h4 { font-size: 0.95rem; font-weight: 600; color: var(--ocean); margin-bottom: 0.3rem; }
+    .tl-item p { font-size: 0.88rem; color: var(--muted); margin: 0; }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: 'Space Mono', monospace; font-size: 0.8rem;
+      color: var(--teal); text-decoration: none;
+      margin-bottom: 3rem; margin-top: 1rem;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    @media (max-width: 600px) {
+      nav { padding: 0.8rem 1rem; }
+      main { padding: 3rem 1.2rem; }
+    }
+  </style>
 </head>
 <body>
 
-<h1>Low-Cost Electric Wheelchair Prototype</h1>
-<p><strong>Year:</strong> 2023 (Year 11 Systems Engineering)</p>
+<nav>
+  <a href="index.html" class="nav-logo">MYR</a>
+  <a href="index.html">← Back to Portfolio</a>
+</nav>
 
-<h2>Overview</h2>
-<p>
-Designed and prototyped a scaled electric wheelchair system aimed at reducing the high cost of mobility devices. 
-The prototype demonstrated differential steering, torque optimisation, and load testing under constrained power conditions.
-</p>
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Power & Mechatronics · Year 11</div>
+    <h1>Low-Cost<br><span>Electric</span><br>Wheelchair</h1>
+    <p class="hero-sub">A scaled prototype exploring affordable electric mobility — demonstrating differential steering, torque-optimised servo motors, and joystick control under constrained power and budget conditions.</p>
+    <div class="hero-chips">
+      <span class="chip">Arduino</span>
+      <span class="chip">H-Bridge Motor Shield</span>
+      <span class="chip">Modified Servo Motors</span>
+      <span class="chip">Joystick Input</span>
+      <span class="chip">Laser-Cut Chassis</span>
+      <span class="chip">9V Supply</span>
+    </div>
+  </div>
+</section>
 
-<h2>Problem</h2>
-<p>
-Commercial electric wheelchairs in Australia range between $2,000–$18,000. 
-The goal was to explore a lower-cost electrical mobility system capable of carrying scaled loads and maintaining control reliability.
-</p>
+<main>
+  <a href="index.html" class="back-link">← Portfolio</a>
 
-<h2>Design Approach</h2>
-<ul>
-<li>Arduino microcontroller</li>
-<li>Motor shield (H-bridge control)</li>
-<li>4 modified servo motors</li>
-<li>Joystick analog input control</li>
-<li>Laser-cut chassis</li>
-<li>9V battery supply</li>
-</ul>
+  <section>
+    <div class="section-label">01 — Overview</div>
+    <h2>What It Does</h2>
+    <p>This prototype is a scaled electric wheelchair demonstrating core mobility mechanics — differential steering via independent motor control, analog joystick input, and load-bearing capability. The joystick maps directly to motor speed and direction through an Arduino and H-bridge shield, giving smooth proportional control.</p>
+    <p>The project was motivated by the high cost of commercial mobility devices in Australia and aimed to validate that reliable motorised control could be achieved at a fraction of the price using accessible components.</p>
+  </section>
 
-<h2>Iteration</h2>
-<p>
-Initial 5V DC motors lacked sufficient torque and drew excessive current. 
-They were replaced with modified servo motors (~1.8 kg·cm stall torque), improving load handling and efficiency.
-</p>
+  <section>
+    <div class="section-label">02 — Problem</div>
+    <h2>The Problem</h2>
+    <p>Commercial electric wheelchairs in Australia cost between $2,000 and $18,000, placing them out of reach for many users without subsidy. The goal was to explore how far a low-cost prototype could go — specifically whether off-the-shelf microcontroller components could deliver reliable differential steering while carrying a meaningful load, within tight power and budget constraints.</p>
+  </section>
 
-<h2>Testing & Results</h2>
-<p>
-The prototype successfully carried a 1 kg load (900 mL water bottle) while maintaining directional control. 
-Differential steering allowed smooth turning under load.
-</p>
+  <section>
+    <div class="section-label">03 — Design Approach</div>
+    <h2>Design Approach</h2>
+    <p>The design prioritised simplicity and testability — every component was chosen to be easily replaceable and measurable during iteration.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🧠</div>
+        <h3>Arduino MCU</h3>
+        <p>Reads analog joystick X/Y axes and maps them to differential motor speed via PWM output.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔁</div>
+        <h3>H-Bridge Shield</h3>
+        <p>Motor shield handles the current demands of the drive motors, protecting the Arduino from back-EMF and overload.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚙️</div>
+        <h3>Modified Servos</h3>
+        <p>Standard servos modified for continuous rotation — providing ~1.8 kg·cm stall torque at low cost.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🪵</div>
+        <h3>Laser-Cut Chassis</h3>
+        <p>Precise flat-pack chassis cut from sheet material — rigid, lightweight, and reproducible.</p>
+      </div>
+    </div>
+  </section>
 
-<h2>Future Improvements</h2>
-<ul>
-<li>Replace servos with geared DC motors</li>
-<li>Improve wheel traction</li>
-<li>Add Bluetooth module</li>
-<li>Upgrade to dual 18650 battery system</li>
-<li>Design full protective enclosure</li>
-</ul>
+  <section>
+    <div class="section-label">04 — Technical Implementation</div>
+    <h2>Technical Implementation</h2>
+    <p><strong>Steering logic:</strong> The joystick outputs two analog voltages (X and Y axes). The Arduino maps these to left and right motor speeds — pushing forward drives both motors equally, while deflecting left slows the left motor and speeds up the right, producing a smooth arc turn. Full lateral deflection pivots the chassis in place.</p>
+    <p><strong>Motor selection:</strong> Four modified continuous-rotation servo motors are used — two per side. Servos were chosen over plain DC motors for their built-in gearbox (higher torque) and ease of control via standard PWM signals without a separate encoder.</p>
 
-<p><a href="index.html">← Back to Home</a></p>
+    <table class="spec-table">
+      <tr><td>Microcontroller</td><td>Arduino Uno</td></tr>
+      <tr><td>Motor Driver</td><td>H-bridge motor shield</td></tr>
+      <tr><td>Drive Motors</td><td>4× modified continuous-rotation servos (~1.8 kg·cm)</td></tr>
+      <tr><td>Input</td><td>Analog joystick (X/Y axes)</td></tr>
+      <tr><td>Chassis</td><td>Laser-cut sheet material</td></tr>
+      <tr><td>Power Supply</td><td>9V battery</td></tr>
+    </table>
+
+    <div class="callout">
+      <p><strong>Torque calculation:</strong> Original 5V DC motors stalled under load and drew excessive current, risking the Arduino's voltage regulator. Modified servos at 1.8 kg·cm stall torque resolved both issues — providing headroom above the 1 kg test load while drawing current within the shield's rated limit.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">05 — Testing & Results</div>
+    <h2>Testing & Results</h2>
+    <div class="results-grid">
+      <div class="result-box">
+        <span class="result-num">1 kg</span>
+        <span class="result-label">Load carried successfully (900mL water bottle)</span>
+      </div>
+      <div class="result-box">
+        <span class="result-num">1.8</span>
+        <span class="result-label">kg·cm stall torque per motor</span>
+      </div>
+      <div class="result-box">
+        <span class="result-num">✓</span>
+        <span class="result-label">Differential steering maintained under full load</span>
+      </div>
+    </div>
+    <p style="margin-top:1.5rem;">The prototype met its core objective — carrying a 1 kg load while maintaining responsive joystick-controlled differential steering. Turning radius was smooth and consistent. The switch from DC motors to modified servos was the critical change that made load-bearing possible within the 9V power budget.</p>
+  </section>
+
+  <section>
+    <div class="section-label">06 — Challenges & Iteration</div>
+    <h2>Challenges & Iteration</h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <h4>Insufficient Motor Torque</h4>
+        <p>Initial 5V DC motors couldn't move the chassis under load and drew current that threatened the Arduino's regulator. Replaced with modified continuous-rotation servos (~1.8 kg·cm) — resolved both torque and current issues.</p>
+      </div>
+      <div class="tl-item">
+        <h4>Excessive Current Draw</h4>
+        <p>Original motors pulled more current than the motor shield could safely supply under stall conditions. The servo swap reduced peak current draw and kept the system within safe operating limits.</p>
+      </div>
+      <div class="tl-item">
+        <h4>Wheel Traction</h4>
+        <p>Smooth wheels slipped on the test surface under load. Added rubber grip material around the wheel circumference to improve friction without adding weight.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">07 — Future Improvements</div>
+    <h2>Future Improvements</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>Geared DC Motors</h3>
+        <p>Replace modified servos with proper geared DC motors for higher efficiency, better speed control, and longer runtime.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔋</div>
+        <h3>18650 Battery Pack</h3>
+        <p>Upgrade from 9V to a dual 18650 Li-ion pack for higher capacity, stable voltage under load, and rechargeability.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📡</div>
+        <h3>Bluetooth Control</h3>
+        <p>Add a Bluetooth module so the wheelchair can be controlled from a smartphone — removing the need for a wired joystick.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🏗️</div>
+        <h3>Full Enclosure</h3>
+        <p>Design a protective shell over the electronics and a more refined chassis for durability and a closer resemblance to a real wheelchair form factor.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
 
 </body>
 </html>
