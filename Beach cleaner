@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Autonomous Beach Cleaning Robot — Mohammed Yasin Rezaie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sand: #e8d5b0;
+      --ocean: #1a3a4a;
+      --teal: #2a7f8f;
+      --accent: #f0a500;
+      --light: #f5f0e8;
+      --dark: #0f1e26;
+      --text: #1a2830;
+      --muted: #5a7080;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--light);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(15,30,38,0.95);
+      backdrop-filter: blur(8px);
+      padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    nav a { color: var(--sand); text-decoration: none; font-family: 'Space Mono', monospace; font-size: 0.8rem; letter-spacing: 0.05em; }
+    nav a:hover { color: var(--accent); }
+    .nav-logo { font-size: 0.9rem; font-weight: 700; color: var(--accent) !important; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      background: var(--ocean);
+      display: flex; align-items: flex-end;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 40%, rgba(42,127,143,0.25) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(240,165,0,0.1) 0%, transparent 50%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; opacity: 0.05;
+      background-image: linear-gradient(var(--teal) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--teal) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .hero-content { position: relative; max-width: 900px; }
+    .hero-tag {
+      display: inline-block;
+      background: var(--teal); color: white;
+      font-family: 'Space Mono', monospace; font-size: 0.7rem;
+      padding: 0.3rem 0.8rem; border-radius: 2px;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(2.2rem, 6vw, 4.5rem);
+      color: white;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+    h1 span { color: var(--accent); }
+    .hero-sub {
+      color: var(--sand); font-size: 1.1rem; font-weight: 300;
+      max-width: 600px; margin-bottom: 2rem;
+    }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--sand); font-family: 'Space Mono', monospace;
+      font-size: 0.7rem; padding: 0.35rem 0.8rem; border-radius: 100px;
+    }
+
+    /* MAIN CONTENT */
+    main { max-width: 860px; margin: 0 auto; padding: 5rem 2rem; }
+
+    section { margin-bottom: 5rem; }
+
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 0.6rem;
+    }
+    h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.6rem; color: var(--ocean);
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 2px solid var(--sand);
+    }
+    p { color: var(--text); margin-bottom: 1rem; font-size: 1rem; }
+
+    /* CARDS GRID */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; margin-top: 1.5rem; }
+    .card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 1.4rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .card-icon { font-size: 1.6rem; margin-bottom: 0.6rem; }
+    .card h3 { font-family: 'Space Mono', monospace; font-size: 0.85rem; color: var(--ocean); margin-bottom: 0.4rem; }
+    .card p { font-size: 0.88rem; color: var(--muted); margin: 0; }
+
+    /* SPEC TABLE */
+    .spec-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    .spec-table tr { border-bottom: 1px solid #e5e5e5; }
+    .spec-table tr:last-child { border: none; }
+    .spec-table td { padding: 0.7rem 0.5rem; font-size: 0.9rem; }
+    .spec-table td:first-child { font-family: 'Space Mono', monospace; font-size: 0.78rem; color: var(--teal); width: 40%; }
+
+    /* TIMELINE */
+    .timeline { border-left: 2px solid var(--teal); padding-left: 1.5rem; margin-top: 1.5rem; }
+    .tl-item { position: relative; margin-bottom: 1.8rem; }
+    .tl-item::before {
+      content: '';
+      position: absolute; left: -1.9rem; top: 0.4rem;
+      width: 10px; height: 10px;
+      background: var(--accent); border-radius: 50%;
+    }
+    .tl-date { font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--muted); margin-bottom: 0.3rem; }
+    .tl-item h4 { font-size: 0.95rem; font-weight: 600; color: var(--ocean); margin-bottom: 0.3rem; }
+    .tl-item p { font-size: 0.88rem; color: var(--muted); margin: 0; }
+
+    /* RESULT BOXES */
+    .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+    .result-box {
+      background: var(--ocean); color: white;
+      border-radius: 6px; padding: 1.4rem; text-align: center;
+    }
+    .result-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.8rem; color: var(--accent);
+      display: block; margin-bottom: 0.3rem;
+    }
+    .result-label { font-size: 0.8rem; opacity: 0.75; }
+
+    /* CALLOUT */
+    .callout {
+      background: #fff8e6;
+      border-left: 3px solid var(--accent);
+      padding: 1rem 1.2rem; border-radius: 0 6px 6px 0;
+      margin-top: 1rem;
+    }
+    .callout p { font-size: 0.9rem; color: var(--text); margin: 0; }
+
+    /* BACK LINK */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: 'Space Mono', monospace; font-size: 0.8rem;
+      color: var(--teal); text-decoration: none;
+      margin-bottom: 3rem; margin-top: 1rem;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    @media (max-width: 600px) {
+      nav { padding: 0.8rem 1rem; }
+      main { padding: 3rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">MYR</a>
+  <a href="index.html">← Back to Portfolio</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Robotics & Embedded Systems</div>
+    <h1>Autonomous<br><span>Beach Cleaning</span><br>Robot</h1>
+    <p class="hero-sub">A GPS-guided, tank-tracked prototype designed to autonomously sift and collect microplastics from beach sand — solar-rechargeable, obstacle-aware, and field-tested.</p>
+    <div class="hero-chips">
+      <span class="chip">ESP32-C3</span>
+      <span class="chip">NEO-6M GPS</span>
+      <span class="chip">Compass Navigation</span>
+      <span class="chip">Custom PCB</span>
+      <span class="chip">3D Printed</span>
+      <span class="chip">C++ / Arduino IDE</span>
+    </div>
+  </div>
+</section>
+
+<main>
+  <a href="index.html" class="back-link">← Portfolio</a>
+
+  <!-- OVERVIEW -->
+  <section>
+    <div class="section-label">01 — Overview</div>
+    <h2>What It Does</h2>
+    <p>This robot autonomously navigates a user-defined GPS coordinate path along a beach, sifting through sand with a conveyor belt and plastic mesh to separate microplastics and small debris into an onboard collection bin. It charges during the day via a solar docking station and operates at night when the beach is clear.</p>
+    <p>The project spans mechanical design (3D-printed tank chassis + conveyor), electronics (custom PCB, motor drivers, sensor fusion), and software (GPS waypoint navigation in C++ on ESP32).</p>
+  </section>
+
+  <!-- PROBLEM -->
+  <section>
+    <div class="section-label">02 — Problem</div>
+    <h2>The Problem</h2>
+    <p>Millions of tonnes of plastic enter the ocean annually. Fragments wash onto beaches daily, where they break into microplastics that persist for thousands of years. Existing solutions — like the BeBot ($55,000 USD) or PTTEP robot — are remote-controlled, expensive, and not autonomous. A low-cost, autonomous prototype was needed to validate the core concept within a $100 budget.</p>
+  </section>
+
+  <!-- DESIGN APPROACH -->
+  <section>
+    <div class="section-label">03 — Design Approach</div>
+    <h2>Design Approach</h2>
+    <p>Three designs were evaluated and scored against criteria including functionality, reliability, safety, aesthetics, weight, and cost. The selected design — Design 2 — scored highest by combining the sifting and collection mechanism into one compact body.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🦾</div>
+        <h3>Tank Tracks</h3>
+        <p>More surface contact than wheels — prevents sinking into soft sand.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧲</div>
+        <h3>Conveyor + Mesh</h3>
+        <p>2mm plastic mesh sifts sand, carrying debris to an internal collection bin.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📡</div>
+        <h3>GPS Waypoints</h3>
+        <p>NEO-6M GPS + QMC5883L compass enables autonomous path-following between set coordinates.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🛡️</div>
+        <h3>Obstacle Detection</h3>
+        <p>Ultrasonic sensor halts the robot if a person or object is within 10cm.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECHNICAL IMPLEMENTATION -->
+  <section>
+    <div class="section-label">04 — Technical Implementation</div>
+    <h2>Technical Implementation</h2>
+
+    <p><strong>Microcontroller:</strong> Upgraded from Arduino Mega to <strong>ESP32-C3 SuperMini</strong> — built-in Wi-Fi and Bluetooth eliminates the need for a separate BT module, reducing size and cost. A web server hosted on the ESP32 allows coordinate input from any device on the same network.</p>
+
+    <p><strong>Custom PCB:</strong> Designed and manufactured via JLCPCB to consolidate all component connections, eliminating rat's-nest wiring and improving reliability and compactness.</p>
+
+    <table class="spec-table">
+      <tr><td>Microcontroller</td><td>ESP32-C3 SuperMini (Wi-Fi + BT built-in)</td></tr>
+      <tr><td>GPS Module</td><td>NEO-6M — 2.5m accuracy, 5 fixes/sec</td></tr>
+      <tr><td>Compass</td><td>QMC5883L — 1–2° accuracy</td></tr>
+      <tr><td>Drive Motors</td><td>2× DC 6V 133RPM 4.5kg·cm geared motor</td></tr>
+      <tr><td>Mechanism Motors</td><td>2× N20 100RPM geared motors</td></tr>
+      <tr><td>Motor Driver</td><td>L298N dual H-bridge</td></tr>
+      <tr><td>Power</td><td>2× 18650 Li-ion in series (7.4V, 18Wh) + 2S BMS</td></tr>
+      <tr><td>Chassis</td><td>PLA 3D printed (±0.1mm tolerance), multi-part glued shell</td></tr>
+      <tr><td>Weight</td><td>~1.8kg prototype</td></tr>
+    </table>
+
+    <div class="callout">
+      <p><strong>Navigation logic:</strong> On boot, the robot registers a home coordinate. The user sets waypoints via the Wi-Fi web interface. The ESP32 calculates bearing using the compass and distance using the GPS, running a correction loop to steer toward each coordinate before advancing to the next.</p>
+    </div>
+  </section>
+
+  <!-- TESTING & RESULTS -->
+  <section>
+    <div class="section-label">05 — Testing & Results</div>
+    <h2>Testing & Results</h2>
+
+    <div class="results-grid">
+      <div class="result-box">
+        <span class="result-num">0.42</span>
+        <span class="result-label">m/s average top speed on sand (3 trials)</span>
+      </div>
+      <div class="result-box">
+        <span class="result-num">±2.5m</span>
+        <span class="result-label">GPS positioning accuracy (NEO-6M spec)</span>
+      </div>
+      <div class="result-box">
+        <span class="result-num">2mm</span>
+        <span class="result-label">Mesh hole size — minimum plastic fragment captured</span>
+      </div>
+      <div class="result-box">
+        <span class="result-num">3</span>
+        <span class="result-label">Surfaces tested: sand, concrete, grass</span>
+      </div>
+    </div>
+
+    <p style="margin-top:1.5rem;"><strong>Speed Test:</strong> Theoretical top speed calculated at 0.377m/s using motor RPM and driver gear circumference. Actual average across three 1m sand runs: 0.41–0.44m/s — exceeded prediction due to battery voltage slightly above rated.</p>
+    <p><strong>GPS Test:</strong> Smartphone GPS (±5m) proved less accurate than the NEO-6M (±2.5m), making a meaningful comparison impossible. A more precise reference instrument would be needed for full validation.</p>
+    <p><strong>Rotation Test:</strong> Robot rotated well on concrete and wood. On sand, excess traction and the long chassis-to-width ratio prevented in-place tank steering — the key mechanical limitation identified during beach testing.</p>
+  </section>
+
+  <!-- CHALLENGES -->
+  <section>
+    <div class="section-label">06 — Challenges & Iteration</div>
+    <h2>Challenges & Iteration</h2>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-date">Iteration 1</div>
+        <h4>3D Print Warping</h4>
+        <p>First shell print failed due to a cold heat plate causing warping. Reprinted with corrected bed temperature — both halves successfully joined.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">Iteration 2</div>
+        <h4>Motor Torque Insufficient</h4>
+        <p>Original 2.5kg·cm motors couldn't drive the loaded chassis. Replaced with 4.5kg·cm motors (sourced from AliExpress) — nearly double the torque.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">Iteration 3</div>
+        <h4>Oscillator Mechanism Failure</h4>
+        <p>First sifter oscillator applied force to one side, causing tilting instead of reciprocating motion. Redesigned with a long push-rod and rubber return spring for reliable oscillation.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">Iteration 4</div>
+        <h4>Microcontroller Swap</h4>
+        <p>Switched from Arduino Mega to ESP32-C3 SuperMini — eliminated the Bluetooth module, reduced footprint, added Wi-Fi web server control. Burned through ~25 ChatGPT coding iterations to get GPS navigation code stable.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">Iteration 5</div>
+        <h4>Custom PCB</h4>
+        <p>Replaced breadboard wiring with a custom PCB (JLCPCB). Eliminated connection failures, improved compactness and repairability.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUTURE IMPROVEMENTS -->
+  <section>
+    <div class="section-label">07 — Future Improvements</div>
+    <h2>Future Improvements</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">📐</div>
+        <h3>Shorter Chassis</h3>
+        <p>Reduce length-to-width ratio so the robot can tank-steer on sand without wheel slip.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">☀️</div>
+        <h3>Solar Charging Station</h3>
+        <p>Add a docking station for daytime solar charging — enabling full night-shift autonomous operation.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🛰️</div>
+        <h3>RTK GPS</h3>
+        <p>Replace NEO-6M with an RTK module for centimetre-level positioning accuracy.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">👁️</div>
+        <h3>Obstacle Sensors</h3>
+        <p>Add multiple ultrasonic or IR sensors for 360° obstacle avoidance rather than front-only detection.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+</body>
+</html>
