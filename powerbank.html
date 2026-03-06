@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>192Wh LiFePO₄ Power Bank — Mohammed Yasin Rezaie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sand: #e8d5b0;
+      --ocean: #1a3a4a;
+      --teal: #2a7f8f;
+      --accent: #f0a500;
+      --light: #f5f0e8;
+      --dark: #0f1e26;
+      --text: #1a2830;
+      --muted: #5a7080;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--light);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(15,30,38,0.95);
+      backdrop-filter: blur(8px);
+      padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    nav a { color: var(--sand); text-decoration: none; font-family: 'Space Mono', monospace; font-size: 0.8rem; letter-spacing: 0.05em; }
+    nav a:hover { color: var(--accent); }
+    .nav-logo { font-size: 0.9rem; font-weight: 700; color: var(--accent) !important; }
+
+    .hero {
+      min-height: 100vh;
+      background: var(--ocean);
+      display: flex; align-items: flex-end;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 40%, rgba(42,127,143,0.25) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(240,165,0,0.1) 0%, transparent 50%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; opacity: 0.05;
+      background-image: linear-gradient(var(--teal) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--teal) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .hero-content { position: relative; max-width: 900px; }
+    .hero-tag {
+      display: inline-block;
+      background: var(--teal); color: white;
+      font-family: 'Space Mono', monospace; font-size: 0.7rem;
+      padding: 0.3rem 0.8rem; border-radius: 2px;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(2.2rem, 6vw, 4.5rem);
+      color: white; line-height: 1.1; margin-bottom: 1.5rem;
+    }
+    h1 span { color: var(--accent); }
+    .hero-sub {
+      color: var(--sand); font-size: 1.1rem; font-weight: 300;
+      max-width: 600px; margin-bottom: 2rem;
+    }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--sand); font-family: 'Space Mono', monospace;
+      font-size: 0.7rem; padding: 0.35rem 0.8rem; border-radius: 100px;
+    }
+
+    main { max-width: 860px; margin: 0 auto; padding: 5rem 2rem; }
+    section { margin-bottom: 5rem; }
+
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 0.6rem;
+    }
+    h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.6rem; color: var(--ocean);
+      margin-bottom: 1.2rem; padding-bottom: 0.6rem;
+      border-bottom: 2px solid var(--sand);
+    }
+    p { color: var(--text); margin-bottom: 1rem; font-size: 1rem; }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; margin-top: 1.5rem; }
+    .card {
+      background: white; border: 1px solid #ddd; border-radius: 6px; padding: 1.4rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .card-icon { font-size: 1.6rem; margin-bottom: 0.6rem; }
+    .card h3 { font-family: 'Space Mono', monospace; font-size: 0.85rem; color: var(--ocean); margin-bottom: 0.4rem; }
+    .card p { font-size: 0.88rem; color: var(--muted); margin: 0; }
+
+    .spec-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    .spec-table tr { border-bottom: 1px solid #e5e5e5; }
+    .spec-table tr:last-child { border: none; }
+    .spec-table td { padding: 0.7rem 0.5rem; font-size: 0.9rem; }
+    .spec-table td:first-child { font-family: 'Space Mono', monospace; font-size: 0.78rem; color: var(--teal); width: 40%; }
+
+    .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+    .result-box {
+      background: var(--ocean); color: white;
+      border-radius: 6px; padding: 1.4rem; text-align: center;
+    }
+    .result-num { font-family: 'Space Mono', monospace; font-size: 1.8rem; color: var(--accent); display: block; margin-bottom: 0.3rem; }
+    .result-label { font-size: 0.8rem; opacity: 0.75; }
+
+    .callout {
+      background: #fff8e6; border-left: 3px solid var(--accent);
+      padding: 1rem 1.2rem; border-radius: 0 6px 6px 0; margin-top: 1rem;
+    }
+    .callout p { font-size: 0.9rem; color: var(--text); margin: 0; }
+
+    .timeline { border-left: 2px solid var(--teal); padding-left: 1.5rem; margin-top: 1.5rem; }
+    .tl-item { position: relative; margin-bottom: 1.8rem; }
+    .tl-item::before {
+      content: ''; position: absolute; left: -1.9rem; top: 0.4rem;
+      width: 10px; height: 10px; background: var(--accent); border-radius: 50%;
+    }
+    .tl-item h4 { font-size: 0.95rem; font-weight: 600; color: var(--ocean); margin-bottom: 0.3rem; }
+    .tl-item p { font-size: 0.88rem; color: var(--muted); margin: 0; }
+
+    .project-photo {
+      width: 100%; border-radius: 8px; overflow: hidden; margin-top: 1.8rem;
+      border: 1px solid #ddd; box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    }
+    .project-photo img { width: 100%; display: block; object-fit: cover; max-height: 520px; }
+    .photo-caption {
+      background: var(--ocean); color: var(--sand);
+      font-family: 'Space Mono', monospace; font-size: 0.72rem;
+      padding: 0.6rem 1rem; letter-spacing: 0.03em;
+    }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: 'Space Mono', monospace; font-size: 0.8rem;
+      color: var(--teal); text-decoration: none;
+      margin-bottom: 3rem; margin-top: 1rem;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    @media (max-width: 600px) {
+      nav { padding: 0.8rem 1rem; }
+      main { padding: 3rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">MYR</a>
+  <a href="index.html">← Back to Portfolio</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Power Electronics & Embedded Systems</div>
+    <h1>192Wh<br><span>LiFePO₄</span><br>Power Bank</h1>
+    <p class="hero-sub">A custom-built, solar-compatible portable power bank with twice the capacity of most commercial alternatives — at half the price. Features real-time OLED energy monitoring, USB-C/A output, and an XT60 high-current port.</p>
+    <div class="hero-chips">
+      <span class="chip">LiFePO₄ 32700</span>
+      <span class="chip">ATtiny85</span>
+      <span class="chip">ACS712 Current Sensor</span>
+      <span class="chip">0.91" OLED</span>
+      <span class="chip">2S5P Battery Pack</span>
+      <span class="chip">60W USB-C Output</span>
+      <span class="chip">Solar Compatible</span>
+      <span class="chip">3D Printed Case</span>
+    </div>
+  </div>
+</section>
+
+<main>
+  <a href="index.html" class="back-link">← Portfolio</a>
+
+  <section>
+    <div class="section-label">01 — Overview</div>
+    <h2>What It Does</h2>
+    <p>This is a fully custom-designed 192Wh portable power bank built from LiFePO₄ cells — the safest lithium chemistry available. It outputs up to 60W via USB-C and USB-A for phones and tablets, and provides raw 6.4V at up to 20A through an XT60 connector for higher-power applications.</p>
+    <p>A 0.91" OLED display driven by an ATtiny85 shows live voltage, current, power, and remaining energy. The modular mounting system allows attachments like a solar charge controller or LED light array to be added externally.</p>
+
+    <div class="project-photo">
+      <img src="powerbank-photo.jpeg" alt="192Wh LiFePO4 power bank — black 3D-printed PLA enclosure with handle, OLED display window, and yellow XT60 connector" />
+      <div class="photo-caption">Final build — 3D-printed PLA enclosure with M3 hardware, OLED display, and XT60 high-current output port</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">02 — Problem</div>
+    <h2>The Problem</h2>
+    <p>Commercial power banks are misleading. Most advertise capacity in mAh — a meaningless figure without voltage — and deliver far less energy than claimed. A 25,000mAh Li-ion bank at 3.7V is only ~92Wh. Premium options like the UGreen 200W Nexode Pro offer just 90Wh for $120 AUD.</p>
+    <p>Beyond capacity, commercial power banks share three common weaknesses: they use Li-ion cells (less thermally stable than LiFePO₄), they can't be charged from a solar panel directly, and they offer no real-time energy monitoring. This build addresses all three — delivering 192Wh for ~$70 AUD total.</p>
+  </section>
+
+  <section>
+    <div class="section-label">03 — Design Approach</div>
+    <h2>Design Approach</h2>
+    <p>The design was built around safety, capacity, and modularity. LiFePO₄ chemistry was chosen over Li-ion for its flat discharge curve, thermal stability, and longer cycle life. The 2S5P cell configuration balances voltage and capacity within the constraints of a common BMS.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🔋</div>
+        <h3>2S5P Cell Pack</h3>
+        <p>10× 32700 LiFePO₄ cells (6Ah, 3.2V each) in series-parallel giving 6.4V at 30Ah — 192Wh total.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧠</div>
+        <h3>ATtiny85 MCU</h3>
+        <p>Bit-bangs I²C to the OLED, reads ACS712 current sensor and voltage divider, tracks cumulative energy in/out.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>Dual Output</h3>
+        <p>60W USB-C + USB-A via a 6V→5V step-down converter, plus raw XT60 at 6.4V / 20A for external use.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">☀️</div>
+        <h3>Solar Input</h3>
+        <p>Modular mount accepts a step-down converter to regulate a 100W panel (≈20V) down to 7.3V for charging.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">04 — Technical Implementation</div>
+    <h2>Technical Implementation</h2>
+
+    <p><strong>Battery pack:</strong> 10 cells wired in a 2S5P arrangement — two groups of five cells in parallel, then those groups in series. Each parallel group provides 6Ah at 3.2V; in series the pack outputs 6.4V nominal at 30Ah (192Wh). A 2S LiFePO₄ BMS handles cell balancing, overcurrent, and short-circuit protection.</p>
+
+    <p><strong>Monitoring system:</strong> The ATtiny85 reads a 30A ACS712 current sensor and a resistor-divider voltage sensor at regular intervals. It integrates current over time to track watt-hours in and out, storing a running energy tally so it survives power cycles. Data is displayed on a 0.91" OLED via software I²C (bit-banging), with a momentary button toggling between display screens.</p>
+
+    <p><strong>Power switch:</strong> A toggle switch isolates the entire system — including the ATtiny — preventing parasitic drain (~0.3W idle) which would otherwise deplete the pack in ~26 days.</p>
+
+    <table class="spec-table">
+      <tr><td>Cells</td><td>10× LiFePO₄ 32700 — 6Ah, 3.2V each</td></tr>
+      <tr><td>Configuration</td><td>2S5P — 6.4V nominal, 30Ah, 192Wh</td></tr>
+      <tr><td>BMS</td><td>2S LiFePO₄ BMS (balancing + protection)</td></tr>
+      <tr><td>Microcontroller</td><td>ATtiny85</td></tr>
+      <tr><td>Current Sensor</td><td>ACS712 — 30A range</td></tr>
+      <tr><td>Display</td><td>0.91" OLED (I²C bit-bang)</td></tr>
+      <tr><td>USB Output</td><td>USB-C + USB-A, max 60W combined</td></tr>
+      <tr><td>High-Current Output</td><td>XT60 — 6.4V at up to 20A</td></tr>
+      <tr><td>Solar Charging</td><td>Step-down: 20V panel → 7.3V, up to 35W</td></tr>
+      <tr><td>Case</td><td>PLA 3D printed, M3 screws + heated inserts</td></tr>
+    </table>
+
+    <div class="callout">
+      <p><strong>Energy tracking:</strong> The ATtiny integrates current readings over time (∫I·dt) to calculate watt-hours consumed and charged. This value persists across power cycles, giving an accurate running state-of-charge readout on the OLED.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">05 — Testing & Results</div>
+    <h2>Testing & Results</h2>
+    <div class="results-grid">
+      <div class="result-box">
+        <span class="result-num">192Wh</span>
+        <span class="result-label">Total usable capacity</span>
+      </div>
+      <div class="result-box">
+        <span class="result-num">35W</span>
+        <span class="result-label">Confirmed solar charging speed</span>
+      </div>
+      <div class="result-box">
+        <span class="result-num">20A</span>
+        <span class="result-label">XT60 output current at 6.4V</span>
+      </div>
+      <div class="result-box">
+        <span class="result-num">~$70</span>
+        <span class="result-label">Total build cost (AUD)</span>
+      </div>
+    </div>
+    <p style="margin-top:1.5rem;"><strong>vs. Commercial:</strong> The UGreen 200W Nexode Pro offers 90Wh for $120 AUD. This build delivers 192Wh — more than double the capacity — for $70 AUD, while adding solar compatibility and real-time energy monitoring that no commercial bank offers at any price.</p>
+    <p><strong>Solar test:</strong> A 100W panel (≈20V open circuit) stepped down to 7.3V via a buck converter delivered a confirmed 35W charge rate into the pack — viable for off-grid use.</p>
+  </section>
+
+  <section>
+    <div class="section-label">06 — Challenges & Iteration</div>
+    <h2>Challenges & Iteration</h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <h4>Case Iterations & Tight Tolerances</h4>
+        <p>The enclosure went through multiple print iterations. Mounting positions were too tight in early versions, and one OLED display was cracked during a forced fit — corrected by adding clearance and test-fitting before final assembly.</p>
+      </div>
+      <div class="tl-item">
+        <h4>ATtiny85 I²C Bit-Banging</h4>
+        <p>The ATtiny85 lacks hardware I²C, requiring software bit-banging to drive the OLED. Getting reliable communication took significant debugging — timing and pull-up resistor values were critical.</p>
+      </div>
+      <div class="tl-item">
+        <h4>Energy Counter Resetting</h4>
+        <p>Early firmware reset the cumulative energy count on every power cycle. Fixed by storing the running tally in EEPROM so it persists across shutdowns.</p>
+      </div>
+      <div class="tl-item">
+        <h4>Button Placement & Hole Diameters</h4>
+        <p>Several button cutouts and port holes were undersized or misaligned across early iterations — corrected incrementally through measured reprints.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">07 — Future Improvements</div>
+    <h2>Future Improvements</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">💡</div>
+        <h3>LED Light Attachment</h3>
+        <p>Use the modular mount to attach a high-power LED array — 130W+ output makes this viable as a field work light.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">💻</div>
+        <h3>Laptop Charger Module</h3>
+        <p>Design a boost converter attachment outputting 19.5V at 3.33A to charge an HP laptop directly from the XT60 port.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔌</div>
+        <h3>More USB Ports</h3>
+        <p>Add additional USB-A and USB-C ports — the current 2-port setup is limiting for multi-device charging.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">☀️</div>
+        <h3>Integrated Solar Controller</h3>
+        <p>Build the step-down solar controller into the main enclosure rather than as an external attachment module.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+</body>
+</html>
